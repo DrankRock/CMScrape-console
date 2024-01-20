@@ -1,0 +1,4 @@
+beautifulsoup4==4.12.3
+cchardet==2.1.7
+lxml==4.8.0
+requests==2.25.1
