@@ -43,7 +43,7 @@ try :
 			links.append(line.strip())
 	with open(args['output'], 'w', newline='') as outfile:
 		csv_writer = csv.writer(outfile)
-		csv_writer.writerow(["title", "expansion", "rarity", "real from", "from", "trend", "30 days", "7 days", "1 day", "url", "image name"])
+		csv_writer.writerow(["title", "expansion", "rarity", "real from", "from", "trend", "30 days", "7 days", "1 day", "url", "image url", "image id"])
 		for link in links :
 			try:
 				stuck = False
@@ -72,7 +72,7 @@ try :
 					rarity = parsed[2][0]
 				except:
 					rarity = ""
-				csv_writer.writerow([parsed[0],expansion, rarity,parsed[1][5] , parsed[1][0], parsed[1][1], parsed[1][2], parsed[1][3], parsed[1][4], link])
+				csv_writer.writerow([parsed[0],expansion, rarity,parsed[1][5] , parsed[1][0], parsed[1][1], parsed[1][2], parsed[1][3], parsed[1][4], link, parsed[-1], str(parsed[-1]).split("/")[-1].replace(".jpg", "")])
 				count += 1
 				outfile.flush()
 			except Exception as exp:
