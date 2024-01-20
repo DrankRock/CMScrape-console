@@ -24,13 +24,30 @@ def unescape(text):
 
 def extract_number(meh):
     # god, this is so dumb
+    if "N/A" in meh:
+        return ""
+
+    currency = "eur"
+    if "u00a3" in meh:
+        meh.replace("u00a3", "")
+        currency = "pnd" # pound sterling
+    
+    
     try:
-        mehh = re.search(r'([0-9]*(\.|))*,[0-9]*', meh).group(0)
-        mehh_arr = str(mehh).split(",")
-        mehhh1 = mehh_arr[0].replace(".", "")
-        strr=str(mehhh1)+"."+str(mehh_arr[1])
+        if currency == "eur":
+            mehh = re.search(r'([0-9]*(\.|))*,[0-9]*', meh).group(0)
+            mehh_arr = str(mehh).split(",")
+            mehhh1 = mehh_arr[0].replace(".", "")
+            strr=str(mehhh1)+"."+str(mehh_arr[1])
+            
+        else:
+            mehh = re.search(r'([0-9]*(\.|))*\.[0-9]*', meh).group(0)
+            mehh_arr = str(mehh).split(".")
+            mehhh1 = mehh_arr[0].replace(",", "")
+            strr=str(mehhh1)+"."+str(mehh_arr[1])
         return strr
-    except:
+    except Exception as e:
+        print(e)
         return ""
 
 def cm_parser(url, response):
@@ -53,5 +70,13 @@ def cm_parser(url, response):
     rarity = re.findall(r"data-original-title=\"(.*?)\"", infos[0])
     expansion = re.findall(r"aria-label=\"(.*?)\"", infos[1])
     img = re.findall(r"<img src=\"(.*?)\" alt=\"", html_content)
-
+    true_price_raw = re.findall(r"<div id=\"articleRow(.*?)<div id=\"articleRow", html_content)
+    try: 
+        true_price_raw_one = true_price_raw[0]
+        true_price_raw_one_only_price = re.findall(r"<div class=\"price-container(.*?)</div", true_price_raw_one)[0]
+        true_price_graw = re.findall(r"color-primary small text-end text-nowrap fw-bold \">(.*?)<", true_price_raw_one_only_price)[0]
+        true_price = extract_number(true_price_graw)
+    except:
+        true_price = ""
+    prices.append(true_price)
     return [title, prices, rarity, expansion, img[1]]

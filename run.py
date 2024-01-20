@@ -34,7 +34,7 @@ check_docker_installed()
 update_libseccomp()
 
 # launch flaresolverr
-start_flaresolverr()
+start_flaresolverr()	
 links = []
 count = 1
 try :
@@ -43,7 +43,7 @@ try :
 			links.append(line.strip())
 	with open(args['output'], 'w', newline='') as outfile:
 		csv_writer = csv.writer(outfile)
-		csv_writer.writerow(["title", "expansion", "rarity", "from", "trend", "30 days", "7 days", "1 day", "url", "image name"])
+		csv_writer.writerow(["title", "expansion", "rarity", "real from", "from", "trend", "30 days", "7 days", "1 day", "url", "image name"])
 		for link in links :
 			try:
 				stuck = False
@@ -53,17 +53,31 @@ try :
 					if not stuck:
 						print("[BLOCKED] - ", now())
 						stuckCounter += 1
+						stuck = True
 					time.sleep(10)
 					response = get(link)
+				if response.status_code != 200:
+					raise Exception("Status code neither 200 nor 429")
 				if stuck :
 					print("[UNBLOCKED] - ", now())
 				print("[LOG] - {}".format(count))
 				parsed = cm_parser(line, response)
 				img_name = IMAGES_PATH+parsed[0].replace(" ", "_")+".jpg"
 				# download(parsed[-1], img_name, response.cookies, response.headers)
-				csv_writer.writerow([parsed[0], parsed[3][0], parsed[2][0], parsed[1][0], parsed[1][1], parsed[1][2], parsed[1][3], parsed[1][4], link])
-			except:
+				try:
+					expansion = parsed[3][0]
+				except:
+					expansion = ""
+				try:
+					rarity = parsed[2][0]
+				except:
+					rarity = ""
+				csv_writer.writerow([parsed[0],expansion, rarity,parsed[1][5] , parsed[1][0], parsed[1][1], parsed[1][2], parsed[1][3], parsed[1][4], link])
+				count += 1
+				outfile.flush()
+			except Exception as exp:
 				print("[BAD PAGE] : ", link)
+				# print(exp)
 			
 finally:
 	# stop flaresolverr
