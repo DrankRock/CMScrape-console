@@ -1,8 +1,10 @@
 # CMScrape - no gui
-A Cardmarket scraper as a command line tool
+A Cardmarket scraper as a command line tool.
+This will work with a linux OS only, because it uses command line to launch and install docker.
 
 ## Setup
 ```
+sudo apt-get install libxml2-dev libxslt-dev docker
 python -m pip install -r requirements.txt
 ```
 
