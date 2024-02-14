@@ -5,18 +5,18 @@ def start_flaresolverr():
     try:
         print("Starting flaresolverr")
         # Check if a container with the name "flaresolverr" already exists
-        check_existing_command = ["docker", "ps", "-aq", "--filter", "name=flaresolverr"]
+        check_existing_command = ["sudo", "docker", "ps", "-aq", "--filter", "name=flaresolverr"]
         existing_container_id = subprocess.run(check_existing_command, check=True, stdout=subprocess.PIPE, text=True).stdout.strip()
 
         if existing_container_id:
             # Stop and remove the existing container
-            stop_and_remove_command = ["docker", "rm", "-f", "flaresolverr"]
+            stop_and_remove_command = ["sudo", "docker", "rm", "-f", "flaresolverr"]
             subprocess.run(stop_and_remove_command, check=True)
             print(f"Existing container with name 'flaresolverr' stopped and removed.")
 
         # Docker run command to start flaresolverr
         start_command = [
-            "docker", "run", "-d",
+            "sudo", "docker", "run", "-d",
             "--name=flaresolverr",
             "-p", "8191:8191",
             "-e", "LOG_LEVEL=info",
@@ -33,13 +33,13 @@ def start_flaresolverr():
 def stop_flaresolverr():
     try:
         # Get the container ID of flaresolverr
-        container_id_command = ["docker", "ps", "--filter", "name=flaresolverr", "--format", "{{.ID}}"]
+        container_id_command = ["sudo", "docker", "ps", "--filter", "name=flaresolverr", "--format", "{{.ID}}"]
         result = subprocess.run(container_id_command, check=True, stdout=subprocess.PIPE, text=True)
         container_id = result.stdout.strip()
 
         # Stop and remove the flaresolverr container
         if container_id:
-            stop_and_remove_command = ["docker", "rm", "-f", container_id]
+            stop_and_remove_command = ["sudo", "docker", "rm", "-f", container_id]
             subprocess.run(stop_and_remove_command, check=True)
             print(f"flaresolverr container with ID {container_id} stopped and removed.")
         else:
