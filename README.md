@@ -8,7 +8,33 @@ sudo apt-get install libxml2-dev libxslt-dev docker
 python -m pip install -r requirements.txt
 ```
 
-**Note : Docker is also necessary but will be automatically installed upon running if not installed**
+<details>
+<summary>Setup on a Virtual Machine (example with Kali)</summary>
+<br>
+Download the vm of your choice (I used Kali Linux (https://www.kali.org/get-kali/#kali-virtual-machines ) )
+<br>
+Theses instructions are best suited for debian based minux
+<br>
+<pre>
+## Debian Based 
+# install needed packages
+printf "%s\n" "deb [arch=amd64] https://download.docker.com/linux/debian buster stable" |\
+sudo tee /etc/apt/sources.list.d/docker-ce.list
+curl -fsSL https://download.docker.com/linux/debian/gpg | sudo apt-key add -
+sudo apt update && sudo apt upgrade
+sudo apt install -y docker-ce libxml2-dev libxslt-dev
+# install cmscrape
+git clone https://github.com/DrankRock/CMScrape-console.git
+cd CMScrape-console
+python3 -m pip install -r requirements.txt
+</pre>
+Then, with the kali linux virtual machine, I had to add this command : 
+<pre>
+export PATH="/home/kali/.local/bin:$PATH"
+</pre>
+</details>
+
+---
 
 ## Usage
 ```console
